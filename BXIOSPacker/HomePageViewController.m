@@ -80,11 +80,19 @@
 
 - (IBAction)uploadProjectBtnPressed:(id)sender {
     
-    NSString *commandUpdateToFir = [NSString stringWithFormat:get_upload_info,
+    NSString *commandGetRespondFromFir = [NSString stringWithFormat:get_upload_info,
                                     [_labelToken stringValue],
                                     [self getCommandForOperationUpdateOrNewApp]];
-    [self callShellWithCommand:commandUpdateToFir];
-    NSLog(@"%@",_processInfo);
+    [self callShellWithCommand:commandGetRespondFromFir];
+    
+    
+    NSArray *keyAndTokenPair = [self getAppKeyAndTokenForProcessInfo:_processInfo];
+    NSString *commandUploadNewApp = [NSString stringWithFormat:upload_app,
+                                     [keyAndTokenPair objectAtIndex:0],
+                                     [keyAndTokenPair objectAtIndex:1],
+                                     NSHomeDirectory()];
+    
+    [self callShellWithCommand:commandUploadNewApp];
 }
 
 
@@ -110,6 +118,7 @@
     
     //Shell command output logs
     NSData *data = [file readDataToEndOfFile];
+    
     _processInfo = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
 }
@@ -144,6 +153,42 @@
     }
 }
 
+
+- (NSArray *)getAppKeyAndTokenForProcessInfo:(NSString *)processInfo {
+/*  fir.im upload info example:
+    {
+        "id": "xxxxxxxxxxxxxxxxxxxx",
+        "type": "ios",
+        "short": "xxxx",
+        "cert": {
+            "icon": {
+                "key": "xxxxx",
+                "token": "xxxxxx",
+                "upload_url": "up_url"
+            },
+            "binary": {
+                "key": "xxxxx",
+                "token": "xxxxxx",
+                "upload_url": "up_url"
+            }
+        }
+    }
+*/
+    
+    NSString *appInfo = [processInfo substringFromIndex:
+                         [processInfo rangeOfString:@"\"binary\""].location];
+    
+    NSArray *appInfoCollection = [appInfo componentsSeparatedByString:@"\""];
+    
+    //get binary's key
+    NSString *keyValue = [appInfoCollection objectAtIndex:4];
+    NSString *tokenValue = [appInfoCollection objectAtIndex:8];
+    
+    NSArray *keyAndTokenPair = [NSArray arrayWithObjects:keyValue, tokenValue, nil];
+    
+    return keyAndTokenPair;
+
+}
 
 #pragma mark - Delegate Methods
 
