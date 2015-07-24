@@ -13,6 +13,8 @@
 @property (nonatomic) NSString *fileUrl;
 @property (nonatomic) NSString *processInfo;
 @property (weak) IBOutlet NSButton *btnPack;
+@property (weak) IBOutlet NSButton *btnUpload;
+
 @property (weak) IBOutlet NSTextField *labelAPPID;
 @property (weak) IBOutlet NSTextField *labelToken;
 
@@ -24,16 +26,13 @@
     [super viewDidLoad];
     [_labelAPPID setDelegate:self];
     [_labelToken setDelegate:self];
+
     [self checkIdAndTokenStatus];
+
+    if([[_labelToken stringValue] length] != 0) {
+        _btnUpload.enabled = YES;
     
-}
-
-
-#pragma mark - Delegate Implementation
-
-- (void)passLogInfoToProcessLabel:(NSTextView *)processInfo {
-    [processInfo setString:_processInfo];
-    
+    }
 }
 
 
@@ -56,6 +55,7 @@
         }
     })];
 }
+
 - (IBAction)packProjectBtnPressed:(id)sender {
 
     ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
@@ -70,32 +70,35 @@
     NSString *commandPackProjectWithDate = [NSString stringWithFormat:pack_to_ipa,NSHomeDirectory(),today,NSHomeDirectory()];
 
     NSString *commandCallAndPack = [[commandCallArchiveWithDate stringByAppendingString:@" && "] stringByAppendingString:commandPackProjectWithDate];
-
-    NSMutableArray *commandToRun = [NSMutableArray arrayWithObjects:
-                                    commandCallAndPack,
-                                    nil];
     
-    [self callShellWithCommand:commandToRun];
+    [self callShellWithCommand:commandCallAndPack];
+    
+    
     
     [self presentViewControllerAsModalWindow:vc];
 }
 
 - (IBAction)uploadProjectBtnPressed:(id)sender {
     
-    
+    NSString *commandUpdateToFir = [NSString stringWithFormat:get_upload_info,
+                                    [_labelToken stringValue],
+                                    [self getCommandForOperationUpdateOrNewApp]];
+    [self callShellWithCommand:commandUpdateToFir];
+    NSLog(@"%@",_processInfo);
 }
 
 
 #pragma mark - Call Shell Methods
 
-- (void)callShellWithCommand:(NSMutableArray *)commandToRun {
+- (void)callShellWithCommand:(NSString *)commandToRun {
     
     NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:@"/bin/zsh"];
     
-    [commandToRun insertObject:@"-c" atIndex:0];
+    NSMutableArray *commandCollection = [NSMutableArray arrayWithObject:@"-c"];
+    [commandCollection addObject:commandToRun];
     
-    [task setArguments:commandToRun];
+    [task setArguments:commandCollection];
     [task setCurrentDirectoryPath:_fileUrl];
     NSLog(@"run command:%@", commandToRun);
     
@@ -120,30 +123,49 @@
     NSString *appID = [defaults stringForKey:@"APPID"];
     NSString *appToken = [defaults stringForKey:@"APPTOKEN"];
     
-    if (appID != nil) {
+    if ([appID length] != 0) {
         [_labelAPPID setStringValue:appID];
     }
-    if (appToken != nil) {
+    if ([appToken length] != 0) {
         [_labelToken setStringValue:appToken];
     }
     
     return;
 }
 
+-(NSString *)getCommandForOperationUpdateOrNewApp {
+    
+    if ([[_labelAPPID stringValue] length] == 0) {
+        return url_new_upload;
+    }
+    else {
+        return [NSString stringWithFormat:url_update,[_labelAPPID stringValue]];
+    
+    }
+}
+
+
+#pragma mark - Delegate Methods
 
 -(void)controlTextDidEndEditing:(NSNotification *)obj {
     
-    if([obj object] == _labelAPPID) {
-      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-      [defaults setObject:[_labelAPPID stringValue] forKey:@"APPID"];
+    if ([obj object] == _labelAPPID) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:[_labelAPPID stringValue] forKey:@"APPID"];
   
     }
     
-    if([obj object] == _labelToken) {
+    if ([obj object] == _labelToken) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:[_labelToken stringValue] forKey:@"APPTOKEN"];
-        
+
     }
 
+}
+
+
+- (void)passLogInfoToProcessLabel:(NSTextView *)processInfo {
+    [processInfo setString:_processInfo];
+    
 }
 @end

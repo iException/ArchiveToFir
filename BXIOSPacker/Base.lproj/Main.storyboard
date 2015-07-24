@@ -721,16 +721,16 @@
                                 </connections>
                             </button>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RJm-XH-8aE" userLabel="应用ID">
-                                <rect key="frame" x="220" y="174" width="211" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="55a32046692d392404000000" drawsBackground="YES" id="dk8-Yh-eWo">
-                                    <font key="font" metaFont="system" size="14"/>
+                                <rect key="frame" x="220" y="174" width="211" height="23"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="初次使用的话你并没有，可不填。" drawsBackground="YES" id="dk8-Yh-eWo">
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WSF-LJ-nTj" userLabel="Token">
                                 <rect key="frame" x="220" y="135" width="211" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="b7038c37f24b73c5324fa2287e432911" drawsBackground="YES" id="fod-5R-nmz">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="fir.im个人信息中， 找到输入API Token..." drawsBackground="YES" id="fod-5R-nmz">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -752,10 +752,19 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Irt-7B-Cg1">
+                                <rect key="frame" x="37" y="151" width="78" height="27"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Fir.im" id="UmL-n2-NnX">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="btnPack" destination="ilH-DB-ubl" id="nxT-hF-Kru"/>
+                        <outlet property="btnUpload" destination="cdB-v8-x7B" id="OHo-bm-hQi"/>
                         <outlet property="filePath" destination="wN2-mJ-AfJ" id="wiw-ey-XmM"/>
                         <outlet property="labelAPPID" destination="RJm-XH-8aE" id="RIZ-g5-aMa"/>
                         <outlet property="labelToken" destination="WSF-LJ-nTj" id="5UX-zD-H0E"/>
