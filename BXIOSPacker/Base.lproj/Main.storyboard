@@ -693,7 +693,7 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ilH-DB-ubl">
-                                <rect key="frame" x="138" y="114" width="64" height="42"/>
+                                <rect key="frame" x="18" y="30" width="64" height="42"/>
                                 <buttonCell key="cell" type="bevel" title="打包" bezelStyle="regularSquare" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nYD-Ax-JyO">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="10"/>
@@ -702,8 +702,16 @@
                                     <action selector="packProjectBtnPressed:" target="XfG-lQ-9wD" id="DmR-nH-hHw"/>
                                 </connections>
                             </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wN2-mJ-AfJ" userLabel="labelFilePath">
+                                <rect key="frame" x="75" y="235" width="269" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" placeholderString="请先选择工程目录..." bezelStyle="round" id="xfv-1m-2p4">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cdB-v8-x7B">
-                                <rect key="frame" x="266" y="114" width="64" height="42"/>
+                                <rect key="frame" x="111" y="30" width="64" height="42"/>
                                 <buttonCell key="cell" type="bevel" title="上传" bezelStyle="regularSquare" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gSN-hr-AAa">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="10"/>
@@ -712,12 +720,36 @@
                                     <action selector="uploadProjectBtnPressed:" target="XfG-lQ-9wD" id="hi9-Q6-5Sg"/>
                                 </connections>
                             </button>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wN2-mJ-AfJ" userLabel="labelFilePath">
-                                <rect key="frame" x="75" y="235" width="269" height="22"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" placeholderString="请先选择工程目录..." bezelStyle="round" id="xfv-1m-2p4">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RJm-XH-8aE" userLabel="应用ID">
+                                <rect key="frame" x="220" y="174" width="211" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="55a32046692d392404000000" drawsBackground="YES" id="dk8-Yh-eWo">
+                                    <font key="font" metaFont="system" size="14"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WSF-LJ-nTj" userLabel="Token">
+                                <rect key="frame" x="220" y="135" width="211" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="b7038c37f24b73c5324fa2287e432911" drawsBackground="YES" id="fod-5R-nmz">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YuA-Wc-ImC">
+                                <rect key="frame" x="111" y="174" width="52" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="应用ID" id="KEY-ob-KMf">
+                                    <font key="font" size="13" name="STHeitiSC-Light"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1m2-Zg-PDh">
+                                <rect key="frame" x="110" y="135" width="62" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="API Token" id="l4F-OC-4Cd">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                         </subviews>
@@ -725,6 +757,8 @@
                     <connections>
                         <outlet property="btnPack" destination="ilH-DB-ubl" id="nxT-hF-Kru"/>
                         <outlet property="filePath" destination="wN2-mJ-AfJ" id="wiw-ey-XmM"/>
+                        <outlet property="labelAPPID" destination="RJm-XH-8aE" id="RIZ-g5-aMa"/>
+                        <outlet property="labelToken" destination="WSF-LJ-nTj" id="5UX-zD-H0E"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

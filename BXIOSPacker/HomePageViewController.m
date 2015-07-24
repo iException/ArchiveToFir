@@ -13,6 +13,8 @@
 @property (nonatomic) NSString *fileUrl;
 @property (nonatomic) NSString *processInfo;
 @property (weak) IBOutlet NSButton *btnPack;
+@property (weak) IBOutlet NSTextField *labelAPPID;
+@property (weak) IBOutlet NSTextField *labelToken;
 
 @end
 
@@ -20,6 +22,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [_labelAPPID setDelegate:self];
+    [_labelToken setDelegate:self];
+    [self checkIdAndTokenStatus];
+    
 }
 
 
@@ -77,7 +83,7 @@
 - (IBAction)uploadProjectBtnPressed:(id)sender {
     
     
-    }
+}
 
 
 #pragma mark - Call Shell Methods
@@ -103,5 +109,41 @@
     NSData *data = [file readDataToEndOfFile];
     _processInfo = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
+}
+
+
+#pragma mark - Common Methods
+
+-(void)checkIdAndTokenStatus {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *appID = [defaults stringForKey:@"APPID"];
+    NSString *appToken = [defaults stringForKey:@"APPTOKEN"];
+    
+    if (appID != nil) {
+        [_labelAPPID setStringValue:appID];
+    }
+    if (appToken != nil) {
+        [_labelToken setStringValue:appToken];
+    }
+    
+    return;
+}
+
+
+-(void)controlTextDidEndEditing:(NSNotification *)obj {
+    
+    if([obj object] == _labelAPPID) {
+      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+      [defaults setObject:[_labelAPPID stringValue] forKey:@"APPID"];
+  
+    }
+    
+    if([obj object] == _labelToken) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:[_labelToken stringValue] forKey:@"APPTOKEN"];
+        
+    }
+
 }
 @end
