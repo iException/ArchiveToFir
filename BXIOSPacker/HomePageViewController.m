@@ -8,6 +8,7 @@
 
 #import "HomePageViewController.h"
 #import "CommandDefinition.h"
+#import <AFNetworking.h>
 
 @interface HomePageViewController ()
 @property (nonatomic) NSString *fileUrl;
@@ -57,7 +58,7 @@
 }
 
 - (IBAction)packProjectBtnPressed:(id)sender {
-
+    
     ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
     vc.delegate = self;
     
@@ -80,22 +81,23 @@
 
 - (IBAction)uploadProjectBtnPressed:(id)sender {
     
-    NSString *commandGetRespondFromFir = [NSString stringWithFormat:get_upload_info,
-                                    [_labelToken stringValue],
-                                    [self getCommandForOperationUpdateOrNewApp]];
-    [self callShellWithCommand:commandGetRespondFromFir];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
+    //参数需要改回百姓
+    NSDictionary *parameters = @{@"type":@"ios",
+                                 @"bundle_id":@"edu.tac.PagedFlowView",
+                                 @"api_token":[_labelToken stringValue]};
     
-    NSArray *keyAndTokenPair = [self getAppKeyAndTokenForProcessInfo:_processInfo];
-    NSString *commandUploadNewApp = [NSString stringWithFormat:upload_app,
-                                     [keyAndTokenPair objectAtIndex:0],
-                                     [keyAndTokenPair objectAtIndex:1],
-                                     NSHomeDirectory()];
-    
-    [self callShellWithCommand:commandUploadNewApp];
+    __block typeof(self) tmpSelf = self;
+    [manager POST:[self getCommandForOperationUpdateOrNewApp] parameters:parameters
+          success:^(AFHTTPRequestOperation *operation, id resposeobject) {
+              NSLog(@"get json: %@", resposeobject);
+              [tmpSelf uploadIpaToFir:resposeobject];
+          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+              NSLog(@"Error: %@", error);
+          }];
+
 }
-
-
 #pragma mark - Call Shell Methods
 
 - (void)callShellWithCommand:(NSString *)commandToRun {
@@ -145,48 +147,50 @@
 -(NSString *)getCommandForOperationUpdateOrNewApp {
     
     if ([[_labelAPPID stringValue] length] == 0) {
-        return url_new_upload;
+        return @"http://api.fir.im/apps";
     }
     else {
-        return [NSString stringWithFormat:url_update,[_labelAPPID stringValue]];
+        return [NSString stringWithFormat:
+                @"http://api.fir.im/apps/%@/releases",
+                [_labelAPPID stringValue]];
     
     }
 }
 
+- (void)uploadIpaToFir:(id)jsonFile {
 
-- (NSArray *)getAppKeyAndTokenForProcessInfo:(NSString *)processInfo {
-/*  fir.im upload info example:
-    {
-        "id": "xxxxxxxxxxxxxxxxxxxx",
-        "type": "ios",
-        "short": "xxxx",
-        "cert": {
-            "icon": {
-                "key": "xxxxx",
-                "token": "xxxxxx",
-                "upload_url": "up_url"
-            },
-            "binary": {
-                "key": "xxxxx",
-                "token": "xxxxxx",
-                "upload_url": "up_url"
-            }
-        }
-    }
-*/
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonFile options:NSJSONWritingPrettyPrinted error:&error];
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
+    NSDictionary *cert = [dic objectForKey:@"cert"];
+    NSDictionary *binary = [cert objectForKey:@"binary"];
+    NSURL *filePath = [NSURL URLWithString:[NSString stringWithFormat:
+                                       @"%@/Desktop/Baixing.ipa",NSHomeDirectory()]];
     
-    NSString *appInfo = [processInfo substringFromIndex:
-                         [processInfo rangeOfString:@"\"binary\""].location];
     
-    NSArray *appInfoCollection = [appInfo componentsSeparatedByString:@"\""];
-    
-    //get binary's key
-    NSString *keyValue = [appInfoCollection objectAtIndex:4];
-    NSString *tokenValue = [appInfoCollection objectAtIndex:8];
-    
-    NSArray *keyAndTokenPair = [NSArray arrayWithObjects:keyValue, tokenValue, nil];
-    
-    return keyAndTokenPair;
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSDictionary *parameters = @{@"key":[binary objectForKey:@"key"],
+                                 @"token":[binary objectForKey:@"token"],
+//                                 @"file":filePath,
+                                 @"x:name":@"百姓网官方版",
+                                 @"x:version":@"1.1",
+                                 @"x:build":@"1.1.1.1"
+                                     };
+    [manager POST:[binary objectForKey:@"upload_url"] parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileURL:filePath name:@"Baixing" error:nil];
+        
+    }success:^(AFHTTPRequestOperation *operation, id resposeobject) {
+        NSLog(@"%@", resposeobject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+//    [manager POST:[binary objectForKey:@"upload_url"] parameters:parameters
+//          success:^(AFHTTPRequestOperation *operation, id resposeobject) {
+//              NSLog(@"%@", resposeobject);
+//          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//              NSLog(@"Error: %@", error);
+//          }];
+
 
 }
 
