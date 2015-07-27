@@ -672,7 +672,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HzX-K2-Ro2" userLabel="btn一键完成">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HzX-K2-Ro2" userLabel="btnPackAndUpload">
                                 <rect key="frame" x="393" y="17" width="69" height="68"/>
                                 <buttonCell key="cell" type="bevel" title="一键完成" bezelStyle="regularSquare" imagePosition="overlaps" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DV9-8K-ptE">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -682,7 +682,7 @@
                                     <segue destination="u00-bE-gjB" kind="show" id="KL3-sG-Iep"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fO3-5F-U4M" userLabel="btn...">
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fO3-5F-U4M" userLabel="btnpathSelect">
                                 <rect key="frame" x="346" y="228" width="43" height="32"/>
                                 <buttonCell key="cell" type="push" title="..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="dtf-df-WAX">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -692,7 +692,7 @@
                                     <action selector="filePathSelectBtnPressed:" target="XfG-lQ-9wD" id="muY-Qa-ToP"/>
                                 </connections>
                             </button>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ilH-DB-ubl">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ilH-DB-ubl" userLabel="btnPack">
                                 <rect key="frame" x="18" y="30" width="64" height="42"/>
                                 <buttonCell key="cell" type="bevel" title="打包" bezelStyle="regularSquare" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nYD-Ax-JyO">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -710,7 +710,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cdB-v8-x7B">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cdB-v8-x7B" userLabel="btnUpload">
                                 <rect key="frame" x="111" y="30" width="64" height="42"/>
                                 <buttonCell key="cell" type="bevel" title="上传" bezelStyle="regularSquare" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gSN-hr-AAa">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -720,7 +720,7 @@
                                     <action selector="uploadProjectBtnPressed:" target="XfG-lQ-9wD" id="hi9-Q6-5Sg"/>
                                 </connections>
                             </button>
-                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RJm-XH-8aE" userLabel="应用ID">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RJm-XH-8aE" userLabel="APPID">
                                 <rect key="frame" x="220" y="174" width="211" height="23"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="新app的话你并没有，可不填。" drawsBackground="YES" id="dk8-Yh-eWo">
                                     <font key="font" metaFont="smallSystem"/>
@@ -736,7 +736,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YuA-Wc-ImC">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YuA-Wc-ImC" userLabel="labelAPPID">
                                 <rect key="frame" x="111" y="174" width="52" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="应用ID" id="KEY-ob-KMf">
                                     <font key="font" size="13" name="STHeitiSC-Light"/>
@@ -744,7 +744,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1m2-Zg-PDh">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1m2-Zg-PDh" userLabel="labelAPIToken">
                                 <rect key="frame" x="110" y="135" width="62" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="API Token" id="l4F-OC-4Cd">
                                     <font key="font" metaFont="system"/>
@@ -760,7 +760,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E5R-Wb-9eB">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E5R-Wb-9eB" userLabel="vision">
                                 <rect key="frame" x="225" y="54" width="96" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="不填不让你上传" drawsBackground="YES" id="eiT-SI-w1B">
                                     <font key="font" metaFont="system"/>
@@ -768,7 +768,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qoc-wN-Ydt">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qoc-wN-Ydt" userLabel="build">
                                 <rect key="frame" x="225" y="22" width="96" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="同上" drawsBackground="YES" id="ZoY-Ur-Jnz">
                                     <font key="font" metaFont="system"/>
@@ -776,7 +776,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8ID-3K-JEO">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8ID-3K-JEO" userLabel="labelBuild">
                                 <rect key="frame" x="182" y="27" width="35" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="build" id="ds0-Sp-AhI">
                                     <font key="font" metaFont="system"/>
@@ -784,7 +784,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2RY-FR-V2g">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2RY-FR-V2g" userLabel="labelVision">
                                 <rect key="frame" x="182" y="57" width="40" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="vision" id="h28-nU-ymy">
                                     <font key="font" metaFont="system"/>
