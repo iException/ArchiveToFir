@@ -166,31 +166,25 @@
     NSDictionary *binary = [cert objectForKey:@"binary"];
     NSURL *filePath = [NSURL URLWithString:[NSString stringWithFormat:
                                        @"%@/Desktop/Baixing.ipa",NSHomeDirectory()]];
-    
+
+    NSData *fileData = [NSData dataWithContentsOfFile:[filePath absoluteString]];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     NSDictionary *parameters = @{@"key":[binary objectForKey:@"key"],
                                  @"token":[binary objectForKey:@"token"],
-//                                 @"file":filePath,
                                  @"x:name":@"百姓网官方版",
                                  @"x:version":@"1.1",
                                  @"x:build":@"1.1.1.1"
                                      };
     [manager POST:[binary objectForKey:@"upload_url"] parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        [formData appendPartWithFileURL:filePath name:@"Baixing" error:nil];
+        
+        [formData appendPartWithFileData:fileData name:@"file" fileName:@"Baixing.ipa" mimeType:@"application/octet-stream"];
         
     }success:^(AFHTTPRequestOperation *operation, id resposeobject) {
         NSLog(@"%@", resposeobject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
-//    [manager POST:[binary objectForKey:@"upload_url"] parameters:parameters
-//          success:^(AFHTTPRequestOperation *operation, id resposeobject) {
-//              NSLog(@"%@", resposeobject);
-//          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//              NSLog(@"Error: %@", error);
-//          }];
-
 
 }
 
