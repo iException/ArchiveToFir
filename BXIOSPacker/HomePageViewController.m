@@ -29,9 +29,9 @@
     [super viewDidLoad];
     [_labelAPPID setDelegate:self];
     [_labelToken setDelegate:self];
-
+    
     [self checkIdAndTokenStatus];
-
+    
     if([[_labelToken stringValue] length] != 0) {
         _btnUpload.enabled = YES;
     
@@ -61,6 +61,7 @@
 
 - (IBAction)packProjectBtnPressed:(id)sender {
     
+    
     ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
     vc.delegate = self;
     
@@ -75,8 +76,6 @@
     NSString *commandCallAndPack = [[commandCallArchiveWithDate stringByAppendingString:@" && "] stringByAppendingString:commandPackProjectWithDate];
     
     [self callShellWithCommand:commandCallAndPack];
-    
-    
     
     [self presentViewControllerAsModalWindow:vc];
 }
@@ -110,6 +109,11 @@
     [commandCollection addObject:commandToRun];
     
     [task setArguments:commandCollection];
+    
+    if(0 == [[self.filePath stringValue] length]) {
+        _fileUrl = [NSString stringWithFormat:@"%@/",NSHomeDirectory()];
+    }
+    
     [task setCurrentDirectoryPath:_fileUrl];
     NSLog(@"run command:%@", commandToRun);
     
