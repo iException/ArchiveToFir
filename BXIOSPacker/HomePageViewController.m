@@ -18,6 +18,8 @@
 
 @property (weak) IBOutlet NSTextField *labelAPPID;
 @property (weak) IBOutlet NSTextField *labelToken;
+@property (weak) IBOutlet NSTextField *labelVision;
+@property (weak) IBOutlet NSTextField *labelBuild;
 
 @end
 
@@ -83,9 +85,8 @@
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
-    //参数需要改回百姓
     NSDictionary *parameters = @{@"type":@"ios",
-                                 @"bundle_id":@"edu.tac.PagedFlowView",
+                                 @"bundle_id":@"com.baixing.iosbaixing",
                                  @"api_token":[_labelToken stringValue]};
     
     __block typeof(self) tmpSelf = self;
@@ -173,8 +174,8 @@
     NSDictionary *parameters = @{@"key":[binary objectForKey:@"key"],
                                  @"token":[binary objectForKey:@"token"],
                                  @"x:name":@"百姓网官方版",
-                                 @"x:version":@"1.1",
-                                 @"x:build":@"1.1.1.1"
+                                 @"x:version":[_labelVision stringValue],
+                                 @"x:build":[_labelBuild stringValue]
                                      };
     [manager POST:[binary objectForKey:@"upload_url"] parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
@@ -201,6 +202,16 @@
     if ([obj object] == _labelToken) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:[_labelToken stringValue] forKey:@"APPTOKEN"];
+        if([[_labelToken stringValue] length] != 0) {
+            _btnUpload.enabled = YES;
+            
+        }
+    }
+    if ([[_labelVision stringValue] length] != 0 &&
+        [[_labelBuild stringValue] length] != 0 &&
+        [[_labelToken stringValue] length] != 0) {
+        
+        _btnUpload.enabled = YES;
 
     }
 
