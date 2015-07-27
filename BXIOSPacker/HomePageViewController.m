@@ -31,11 +31,7 @@
     [_labelToken setDelegate:self];
     
     [self checkIdAndTokenStatus];
-    
-    if([[_labelToken stringValue] length] != 0) {
-        _btnUpload.enabled = YES;
-    
-    }
+
 }
 
 
