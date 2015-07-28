@@ -57,6 +57,7 @@
             _fileUrl = [[panel URL] path];
             [self.filePath setStringValue:_fileUrl];
             
+            //If and only if you select filepath you can pack your project
             _btnPack.enabled = YES;
         }
     })];
@@ -126,6 +127,7 @@
     NSString *appID = [defaults stringForKey:@"APPID"];
     NSString *appToken = [defaults stringForKey:@"APPTOKEN"];
     
+    //Set default ID and Token for user which enterd before
     if ([appID length] != 0) {
         [_labelAPPID setStringValue:appID];
     }
@@ -156,8 +158,10 @@
 
 -(void)controlTextDidEndEditing:(NSNotification *)obj {
     
+    //label finished editing
     if ([obj object] == _labelAPPID) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        //store info for user
         [defaults setObject:[_labelAPPID stringValue] forKey:@"APPID"];
   
     }
@@ -165,11 +169,9 @@
     if ([obj object] == _labelToken) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:[_labelToken stringValue] forKey:@"APPTOKEN"];
-        if([[_labelToken stringValue] length] != 0) {
-            _btnUpload.enabled = YES;
-            
-        }
+        
     }
+    //If and only if you enter Token, Vision and Build you can upload
     if ([[_labelVision stringValue] length] != 0 &&
         [[_labelBuild stringValue] length] != 0 &&
         [[_labelToken stringValue] length] != 0) {
@@ -201,6 +203,7 @@
 
 - (void)postRequestToFirAndUploadThenReturnInfoToField:(NSScrollView *)processInfo {
     
+    //Post request to Fir.im and get KEY and TOKEN for upload
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
     NSDictionary *parameters = @{@"type":@"ios",
@@ -225,6 +228,7 @@
     
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:jsonFile options:NSJSONWritingPrettyPrinted error:&error];
+    //Show json feedback to textfield
     _uploadProcessInfo = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
@@ -243,6 +247,7 @@
                                  @"x:build":[_labelBuild stringValue]
                                  };
     
+    //Upload ipa file to upload_url
     [manager POST:[binary objectForKey:@"upload_url"] parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
         [formData appendPartWithFileData:fileData name:@"file" fileName:@"Baixing.ipa" mimeType:@"application/octet-stream"];
@@ -251,6 +256,7 @@
         NSLog(@"%@", resposeobject);
         NSError *error = nil;
         NSData *completionData = [NSJSONSerialization dataWithJSONObject:resposeobject options:NSJSONWritingPrettyPrinted error:&error];
+        //Update uploadProcessInfo text when finish upload ipa
         _uploadProcessInfo = [_uploadProcessInfo stringByAppendingString:
                                                     [[NSString alloc] initWithData:completionData
                                                                           encoding:NSUTF8StringEncoding]];
@@ -260,7 +266,7 @@
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
         
-        //具体Error输出需要修改
+        //Error information need to show more in detail
         _uploadProcessInfo = [_uploadProcessInfo stringByAppendingString:@"\nError"];
     }];
 
