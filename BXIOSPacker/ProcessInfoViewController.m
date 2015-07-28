@@ -9,6 +9,7 @@
 #import "ProcessInfoViewController.h"
 
 @interface ProcessInfoViewController ()
+@property (weak) IBOutlet NSTextField *labelProcessTitle;
 
 @end
 
@@ -18,7 +19,18 @@
     [super viewDidLoad];
     
     NSTextView *textContent = [self.processInfo documentView];
-    [self.delegate passLogInfoToProcessLabel:textContent];
+    
+    NSViewController *vc = (NSViewController *)self.delegate;
+    if ([vc.identifier  isEqual: @"PackVC"]) {
+        [textContent setString:[self.delegate packArchiveToIpaAndReturnInfo]];
+        
+    }
+    else if ([vc.identifier isEqualToString:@"UploadVC"]) {
+        [_labelProcessTitle setStringValue:@"上传中..."];
+        [self.delegate postRequestToFirAndUploadThenReturnInfoToField:self.processInfo];
+    }
 }
+
+
 
 @end

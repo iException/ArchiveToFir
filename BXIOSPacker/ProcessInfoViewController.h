@@ -10,7 +10,8 @@
 
 @protocol LogInfoTransitionDelegate
 
--(void)passLogInfoToProcessLabel:(NSTextView *)processInfo;
+-(NSString *)packArchiveToIpaAndReturnInfo;
+- (void)postRequestToFirAndUploadThenReturnInfoToField:(NSScrollView *)processInfo;
 
 @end
 

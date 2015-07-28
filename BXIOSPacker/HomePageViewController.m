@@ -12,7 +12,8 @@
 
 @interface HomePageViewController ()
 @property (nonatomic) NSString *fileUrl;
-@property (nonatomic) NSString *processInfo;
+@property (nonatomic) NSString *packProcessInfo;
+@property (nonatomic) NSString *uploadProcessInfo;
 @property (weak) IBOutlet NSButton *btnPack;
 @property (weak) IBOutlet NSButton *btnUpload;
 
@@ -27,6 +28,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _uploadProcessInfo = @"Waiting...\n";
+    
+    //Add label delegate to detect didFinishEditing
     [_labelAPPID setDelegate:self];
     [_labelToken setDelegate:self];
     [_labelVision setDelegate:self];
@@ -43,6 +47,7 @@
     
     NSOpenPanel *panel = [NSOpenPanel openPanel];
     [panel setPrompt:@"Choose"];
+    //Set default filePath
     [panel setDirectoryURL:[NSURL fileURLWithPath:@"/Users/"]];
     [panel setCanChooseFiles:YES];
     [panel setCanChooseDirectories:YES];
@@ -59,43 +64,26 @@
 
 - (IBAction)packProjectBtnPressed:(id)sender {
     
-    
+    self.identifier = @"PackVC";
     ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
     vc.delegate = self;
-    
-    NSDateFormatter *todayFormatter = [[NSDateFormatter alloc]init];
-    [todayFormatter setDateFormat:@"YYYY-MM-dd"];
-    NSString *today = [todayFormatter stringFromDate:[NSDate date]];
-    
-    NSString *commandCallArchiveWithDate = [NSString stringWithFormat:call_archive,today];
-    //Pack to desktop 
-    NSString *commandPackProjectWithDate = [NSString stringWithFormat:pack_to_ipa,NSHomeDirectory(),today,NSHomeDirectory()];
-
-    NSString *commandCallAndPack = [[commandCallArchiveWithDate stringByAppendingString:@" && "] stringByAppendingString:commandPackProjectWithDate];
-    
-    [self callShellWithCommand:commandCallAndPack];
     
     [self presentViewControllerAsModalWindow:vc];
 }
 
 - (IBAction)uploadProjectBtnPressed:(id)sender {
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    self.identifier = @"UploadVC";
+    ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
+    vc.delegate = self;
     
-    NSDictionary *parameters = @{@"type":@"ios",
-                                 @"bundle_id":@"com.baixing.iosbaixing",
-                                 @"api_token":[_labelToken stringValue]};
-    
-    __block typeof(self) tmpSelf = self;
-    [manager POST:[self getCommandForOperationUpdateOrNewApp] parameters:parameters
-          success:^(AFHTTPRequestOperation *operation, id resposeobject) {
-              NSLog(@"get json: %@", resposeobject);
-              [tmpSelf uploadIpaToFir:resposeobject];
-          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-              NSLog(@"Error: %@", error);
-          }];
+    [self presentViewControllerAsModalWindow:vc];
 
 }
+
+
+
+
 #pragma mark - Call Shell Methods
 
 - (void)callShellWithCommand:(NSString *)commandToRun {
@@ -103,6 +91,7 @@
     NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:@"/bin/zsh"];
     
+    //Use -c to directly run command
     NSMutableArray *commandCollection = [NSMutableArray arrayWithObject:@"-c"];
     [commandCollection addObject:commandToRun];
     
@@ -124,7 +113,7 @@
     //Shell command output logs
     NSData *data = [file readDataToEndOfFile];
     
-    _processInfo = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    _packProcessInfo = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
 }
 
@@ -149,9 +138,11 @@
 
 -(NSString *)getCommandForOperationUpdateOrNewApp {
     
+    //User push a new app and does not have a appID
     if ([[_labelAPPID stringValue] length] == 0) {
         return @"http://api.fir.im/apps";
     }
+    //User release a new vision
     else {
         return [NSString stringWithFormat:
                 @"http://api.fir.im/apps/%@/releases",
@@ -160,36 +151,6 @@
     }
 }
 
-- (void)uploadIpaToFir:(id)jsonFile {
-
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonFile options:NSJSONWritingPrettyPrinted error:&error];
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
-    NSDictionary *cert = [dic objectForKey:@"cert"];
-    NSDictionary *binary = [cert objectForKey:@"binary"];
-    NSURL *filePath = [NSURL URLWithString:[NSString stringWithFormat:
-                                       @"%@/Desktop/Baixing.ipa",NSHomeDirectory()]];
-
-    NSData *fileData = [NSData dataWithContentsOfFile:[filePath absoluteString]];
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary *parameters = @{@"key":[binary objectForKey:@"key"],
-                                 @"token":[binary objectForKey:@"token"],
-                                 @"x:name":@"百姓网官方版",
-                                 @"x:version":[_labelVision stringValue],
-                                 @"x:build":[_labelBuild stringValue]
-                                     };
-    [manager POST:[binary objectForKey:@"upload_url"] parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        
-        [formData appendPartWithFileData:fileData name:@"file" fileName:@"Baixing.ipa" mimeType:@"application/octet-stream"];
-        
-    }success:^(AFHTTPRequestOperation *operation, id resposeobject) {
-        NSLog(@"%@", resposeobject);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
-    }];
-
-}
 
 #pragma mark - Delegate Methods
 
@@ -220,8 +181,89 @@
 }
 
 
-- (void)passLogInfoToProcessLabel:(NSTextView *)processInfo {
-    [processInfo setString:_processInfo];
+-(NSString *)packArchiveToIpaAndReturnInfo {
     
+    NSDateFormatter *todayFormatter = [[NSDateFormatter alloc]init];
+    [todayFormatter setDateFormat:@"YYYY-MM-dd"];
+    NSString *today = [todayFormatter stringFromDate:[NSDate date]];
+    
+    //Call the Archive of Baixing.xcodeproj
+    NSString *commandCallArchiveWithDate = [NSString stringWithFormat:call_archive,today];
+    //Pack to desktop
+    NSString *commandPackProjectWithDate = [NSString stringWithFormat:pack_to_ipa,NSHomeDirectory(),today,NSHomeDirectory()];
+    
+    NSString *commandCallAndPack = [[commandCallArchiveWithDate stringByAppendingString:@" && "] stringByAppendingString:commandPackProjectWithDate];
+    [self callShellWithCommand:commandCallAndPack];
+    
+    return _packProcessInfo;
 }
+
+
+- (void)postRequestToFirAndUploadThenReturnInfoToField:(NSScrollView *)processInfo {
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
+    NSDictionary *parameters = @{@"type":@"ios",
+                                 @"bundle_id":@"com.baixing.iosbaixing",
+                                 @"api_token":[_labelToken stringValue]};
+    
+    __block typeof(self) tmpSelf = self;
+    [manager POST:[self getCommandForOperationUpdateOrNewApp] parameters:parameters
+          success:^(AFHTTPRequestOperation *operation, id resposeobject) {
+              NSLog(@"get json: %@", resposeobject);
+              [tmpSelf uploadIpaToFirWithJson:resposeobject andReturnInfo:processInfo];
+              
+              NSTextView *textContent = [processInfo documentView];
+              [textContent setString:_uploadProcessInfo];
+              
+          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+              NSLog(@"Error: %@", error);
+          }];
+}
+
+- (void)uploadIpaToFirWithJson:(id)jsonFile andReturnInfo:(NSScrollView *)processInfo {
+    
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonFile options:NSJSONWritingPrettyPrinted error:&error];
+    _uploadProcessInfo = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
+    NSDictionary *cert = [dic objectForKey:@"cert"];
+    NSDictionary *binary = [cert objectForKey:@"binary"];
+    NSURL *filePath = [NSURL URLWithString:[NSString stringWithFormat:
+                                            @"%@/Desktop/Baixing.ipa",NSHomeDirectory()]];
+    
+    NSData *fileData = [NSData dataWithContentsOfFile:[filePath absoluteString]];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSDictionary *parameters = @{@"key":[binary objectForKey:@"key"],
+                                 @"token":[binary objectForKey:@"token"],
+                                 @"x:name":@"百姓网官方版",
+                                 @"x:version":[_labelVision stringValue],
+                                 @"x:build":[_labelBuild stringValue]
+                                 };
+    
+    [manager POST:[binary objectForKey:@"upload_url"] parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        
+        [formData appendPartWithFileData:fileData name:@"file" fileName:@"Baixing.ipa" mimeType:@"application/octet-stream"];
+        
+    }success:^(AFHTTPRequestOperation *operation, id resposeobject) {
+        NSLog(@"%@", resposeobject);
+        NSError *error = nil;
+        NSData *completionData = [NSJSONSerialization dataWithJSONObject:resposeobject options:NSJSONWritingPrettyPrinted error:&error];
+        _uploadProcessInfo = [_uploadProcessInfo stringByAppendingString:
+                                                    [[NSString alloc] initWithData:completionData
+                                                                          encoding:NSUTF8StringEncoding]];
+        NSTextView *textContent = [processInfo documentView];
+        [textContent setString:_uploadProcessInfo];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        
+        //具体Error输出需要修改
+        _uploadProcessInfo = [_uploadProcessInfo stringByAppendingString:@"\nError"];
+    }];
+
+}
+
 @end
