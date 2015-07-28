@@ -26,7 +26,6 @@
         
     }
     else if ([vc.identifier isEqualToString:@"UploadVC"]) {
-        [_labelProcessTitle setStringValue:@"上传中..."];
         [self.delegate postRequestToFirAndUploadThenReturnInfoToField:self.processInfo];
     }
 }

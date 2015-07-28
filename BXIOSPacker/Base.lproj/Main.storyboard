@@ -846,7 +846,7 @@
                             </scrollView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XKa-Rp-nV7" userLabel="labelStatus">
                                 <rect key="frame" x="58" y="232" width="289" height="48"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="完成显示：&quot;is_completed&quot; = 1" id="BCR-4e-Vl4">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="完成显示：&quot;is_completed&quot; : true" id="BCR-4e-Vl4">
                                     <font key="font" size="19" name="STHeitiSC-Light"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
