@@ -29,6 +29,8 @@
     [super viewDidLoad];
     [_labelAPPID setDelegate:self];
     [_labelToken setDelegate:self];
+    [_labelVision setDelegate:self];
+    [_labelBuild setDelegate:self];
     
     [self checkIdAndTokenStatus];
 
