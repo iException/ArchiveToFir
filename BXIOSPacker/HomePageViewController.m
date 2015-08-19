@@ -22,6 +22,8 @@
 @property (weak) IBOutlet NSTextField *labelVision;
 @property (weak) IBOutlet NSTextField *labelBuild;
 
+@property (nonatomic, strong)NSView *WaitingIndicator;
+
 @end
 
 @implementation HomePageViewController
@@ -37,7 +39,8 @@
     [_labelBuild setDelegate:self];
     
     [self checkIdAndTokenStatus];
-
+    
+    
 }
 
 
@@ -65,11 +68,32 @@
 
 - (IBAction)packProjectBtnPressed:(id)sender {
     
-    self.identifier = @"PackVC";
-    ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
-    vc.delegate = self;
+//    self.identifier = @"PackVC";
+//    ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
+//    vc.delegate = self;
     
-    [self presentViewControllerAsModalWindow:vc];
+    // Waiting alert with ProgressIndicator
+    NSAlert *alertSheet = [[NSAlert alloc]init];
+    [alertSheet setMessageText:@"Please waiting for processing..."];
+    NSView *backView = [[NSView alloc]initWithFrame:NSRectFromCGRect(CGRectMake(0, 0, 150, 100))];
+    
+    NSProgressIndicator *indicator = [[NSProgressIndicator alloc]initWithFrame:NSRectFromCGRect(CGRectMake(50,0 , 100, 100))];
+    indicator.style = NSProgressIndicatorSpinningStyle;
+    [backView addSubview:indicator];
+    [alertSheet setAccessoryView:backView];
+    [indicator startAnimation:alertSheet];
+    [alertSheet beginSheetModalForWindow:self.view.window completionHandler:nil];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        [self packArchiveToIpaAndReturnInfo];
+        // Complete then update UI
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+//            [backView removeFromSuperview];
+            [backView removeFromSuperview];
+            [alertSheet setInformativeText:@"SUCCEEDED, to find your IPA file on DESKTOP."];
+            [alertSheet setMessageText:@"Pack succeeded!"];
+        });
+    });
 }
 
 - (IBAction)uploadProjectBtnPressed:(id)sender {
@@ -192,7 +216,7 @@
     //Call the Archive of Baixing.xcodeproj
     NSString *commandCallArchiveWithDate = [NSString stringWithFormat:call_archive,today];
     //Pack to desktop
-    NSString *commandPackProjectWithDate = [NSString stringWithFormat:pack_to_ipa,NSHomeDirectory(),today,NSHomeDirectory()];
+    NSString *commandPackProjectWithDate = [NSString stringWithFormat:export_ipa,today, NSHomeDirectory()];
     
     NSString *commandCallAndPack = [[commandCallArchiveWithDate stringByAppendingString:@" && "] stringByAppendingString:commandPackProjectWithDate];
     [self callShellWithCommand:commandCallAndPack];

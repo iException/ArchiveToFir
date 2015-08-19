@@ -808,6 +808,24 @@
             </objects>
             <point key="canvasLocation" x="75" y="655"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="Dn2-yF-PPw">
+            <objects>
+                <viewController storyboardIdentifier="WaitingVC" id="529-W2-sgg" sceneMemberID="viewController">
+                    <view key="view" id="9Ci-Jx-fBQ">
+                        <rect key="frame" x="0.0" y="0.0" width="405" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="GNM-HB-4sb">
+                                <rect key="frame" x="186" y="119" width="32" height="32"/>
+                            </progressIndicator>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="Tka-Xc-jTT" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="571.5" y="655"/>
+        </scene>
         <!--Process Info View Controller-->
         <scene sceneID="qbe-y9-JO7">
             <objects>

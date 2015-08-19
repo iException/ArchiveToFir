@@ -12,11 +12,14 @@
 
 #pragma mark - Command List
 
-//先把命令写在这里回去改
-#define pack_to_ipa @"xcrun -sdk iphoneos PackageApplication -v '%@/Library/Developer/Xcode/Archives/%@/BaixingFromScript.xcarchive/Products/Applications/Baixing.app' -o '%@/Desktop/Baixing.ipa'"
-
 #define call_archive @"xcodebuild clean && xcodebuild archive -workspace Baixing.xcworkspace -scheme Baixing -sdk iphoneos -configuration Release -archivePath ~/Library/Developer/Xcode/Archives/%@/BaixingFromScript.xcarchive"
 
+#define export_ipa @"xcodebuild -exportArchive -archivePath ~/Library/Developer/Xcode/Archives/%@/BaixingFromScript.xcarchive -exportPath %@/Desktop/Baixing -exportFormat ipa"
+
+//# First build the archive
+//xcodebuild archive -scheme $SCHEME_NAME -archivePath $ARCHIVE_NAME
+//# Then export it to an IPA
+//xcodebuild -exportArchive -archivePath $ARCHIVE_NAME.xcarchive -exportPath $ARCHIVE_NAME -exportFormat ipa -exportProvisioningProfile "$PROVISIONING_PROFILE" -exportSigningIdentity "$DEVELOPER_NAME"
 
 //---------------------------------------------------------------------------------
 
