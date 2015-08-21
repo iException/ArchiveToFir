@@ -74,35 +74,69 @@
     
     // Waiting alert with ProgressIndicator
     NSAlert *alertSheet = [[NSAlert alloc]init];
-    [alertSheet setMessageText:@"Please waiting for processing..."];
+    [alertSheet setMessageText:@"Please waiting for uploading..."];
     NSView *backView = [[NSView alloc]initWithFrame:NSRectFromCGRect(CGRectMake(0, 0, 150, 100))];
     
     NSProgressIndicator *indicator = [[NSProgressIndicator alloc]initWithFrame:NSRectFromCGRect(CGRectMake(50,0 , 100, 100))];
     indicator.style = NSProgressIndicatorSpinningStyle;
     [backView addSubview:indicator];
-    [alertSheet setAccessoryView:backView];
     [indicator startAnimation:alertSheet];
-    [alertSheet beginSheetModalForWindow:self.view.window completionHandler:nil];
+    [alertSheet setAccessoryView:backView];
+    [alertSheet addButtonWithTitle:@"OK"];
+    NSButton *confirm = [alertSheet.buttons objectAtIndex:0];
+    confirm.enabled = NO;
     
+    [alertSheet beginSheetModalForWindow:self.view.window completionHandler:nil];
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         [self packArchiveToIpaAndReturnInfo];
         // Complete then update UI
         dispatch_async(dispatch_get_main_queue(), ^(void){
-//            [backView removeFromSuperview];
             [backView removeFromSuperview];
             [alertSheet setInformativeText:@"SUCCEEDED, to find your IPA file on DESKTOP."];
             [alertSheet setMessageText:@"Pack succeeded!"];
+            confirm.enabled = YES;
         });
     });
 }
 
 - (IBAction)uploadProjectBtnPressed:(id)sender {
     
-    self.identifier = @"UploadVC";
-    ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
-    vc.delegate = self;
+//    self.identifier = @"UploadVC";
+//    ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
+//    vc.delegate = self;
+//    
+//    [self presentViewControllerAsModalWindow:vc];
     
-    [self presentViewControllerAsModalWindow:vc];
+    NSAlert *alertSheet = [[NSAlert alloc]init];
+    [alertSheet setMessageText:@"Please waiting for processing..."];
+    NSView *backView = [[NSView alloc]initWithFrame:NSRectFromCGRect(CGRectMake(0, 0, 150, 100))];
+    
+    NSProgressIndicator *indicator = [[NSProgressIndicator alloc]initWithFrame:NSRectFromCGRect(CGRectMake(50,0 , 100, 100))];
+    indicator.style = NSProgressIndicatorSpinningStyle;
+    [backView addSubview:indicator];
+    [indicator startAnimation:alertSheet];
+    [alertSheet setAccessoryView:backView];
+    [alertSheet addButtonWithTitle:@"OK"];
+    NSButton *confirm = [alertSheet.buttons objectAtIndex:0];
+    confirm.enabled = NO;
+    
+    [alertSheet beginSheetModalForWindow:self.view.window completionHandler:nil];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self postRequestToFirAndUploadWhenSuccess: ^{
+            // Complete then update UI
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                [backView removeFromSuperview];
+                [alertSheet setInformativeText:@"SUCCEEDED, to download your app on Fir.im."];
+                [alertSheet setMessageText:@"Upload succeeded!"];
+                confirm.enabled = YES;
+            });
+        
+        }];
+        // Complete then update UI
+    });
+
 
 }
 
@@ -225,7 +259,7 @@
 }
 
 
-- (void)postRequestToFirAndUploadThenReturnInfoToField:(NSScrollView *)processInfo {
+- (void)postRequestToFirAndUploadWhenSuccess:(void (^)(void))success {
     
     //Post request to Fir.im and get KEY and TOKEN for upload
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -238,17 +272,17 @@
     [manager POST:[self getCommandForOperationUpdateOrNewApp] parameters:parameters
           success:^(AFHTTPRequestOperation *operation, id resposeobject) {
               NSLog(@"get json: %@", resposeobject);
-              [tmpSelf uploadIpaToFirWithJson:resposeobject andReturnInfo:processInfo];
+              [tmpSelf uploadIpaToFirWithJson:resposeobject success:success];
               
-              NSTextView *textContent = [processInfo documentView];
-              [textContent setString:_uploadProcessInfo];
+//              NSTextView *textContent = [processInfo documentView];
+//              [textContent setString:_uploadProcessInfo];
               
           } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
               NSLog(@"Error: %@", error);
           }];
 }
 
-- (void)uploadIpaToFirWithJson:(id)jsonFile andReturnInfo:(NSScrollView *)processInfo {
+- (void)uploadIpaToFirWithJson:(id)jsonFile success:(void (^)(void))success {
     
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:jsonFile options:NSJSONWritingPrettyPrinted error:&error];
@@ -284,8 +318,10 @@
         _uploadProcessInfo = [_uploadProcessInfo stringByAppendingString:
                                                     [[NSString alloc] initWithData:completionData
                                                                           encoding:NSUTF8StringEncoding]];
-        NSTextView *textContent = [processInfo documentView];
-        [textContent setString:_uploadProcessInfo];
+        
+        success();
+//        NSTextView *textContent = [processInfo documentView];
+//        [textContent setString:_uploadProcessInfo];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);

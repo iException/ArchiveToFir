@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "ProcessInfoViewController.h"
 
-@interface HomePageViewController : NSViewController<LogInfoTransitionDelegate,NSTextFieldDelegate>
+@interface HomePageViewController : NSViewController<NSTextFieldDelegate>
 
 @property (weak) IBOutlet NSTextField *filePath;
 

@@ -8,16 +8,16 @@
 
 #import <Cocoa/Cocoa.h>
 
-@protocol LogInfoTransitionDelegate
-
--(NSString *)packArchiveToIpaAndReturnInfo;
-- (void)postRequestToFirAndUploadThenReturnInfoToField:(NSScrollView *)processInfo;
-
-@end
+//@protocol LogInfoTransitionDelegate
+//
+//-(NSString *)packArchiveToIpaAndReturnInfo;
+//- (void)postRequestToFirAndUploadThenReturnInfo;
+//
+//@end
 
 @interface ProcessInfoViewController : NSViewController
 
-@property (nonatomic) id <LogInfoTransitionDelegate> delegate;
+//@property (nonatomic) id <LogInfoTransitionDelegate> delegate;
 
 @property (weak) IBOutlet NSScrollView *processInfo;
 

@@ -17,18 +17,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSTextView *textContent = [self.processInfo documentView];
-    
-    NSViewController *vc = (NSViewController *)self.delegate;
-    //If user push Pack button
-    if ([vc.identifier  isEqual: @"PackVC"]) {
-        [textContent setString:[self.delegate packArchiveToIpaAndReturnInfo]];
-    }
-    //If user push Upload button
-    else if ([vc.identifier isEqualToString:@"UploadVC"]) {
-        [self.delegate postRequestToFirAndUploadThenReturnInfoToField:self.processInfo];
-    }
+//    
+//    NSTextView *textContent = [self.processInfo documentView];
+//    
+//    NSViewController *vc = (NSViewController *)self.delegate;
+//    //If user push Pack button
+//    if ([vc.identifier  isEqual: @"PackVC"]) {
+//        [textContent setString:[self.delegate packArchiveToIpaAndReturnInfo]];
+//    }
+//    //If user push Upload button
+//    else if ([vc.identifier isEqualToString:@"UploadVC"]) {
+//        [self.delegate postRequestToFirAndUploadThenReturnInfoToField:self.processInfo];
+//    }
 }
 
 @end
