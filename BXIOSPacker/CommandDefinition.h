@@ -18,6 +18,10 @@
 
 #define pack_to_ipa @"xcrun -sdk iphoneos PackageApplication -v '%@/Library/Developer/Xcode/Archives/%@/BaixingFromScript.xcarchive/Products/Applications/Baixing.app' -o '%@/Desktop/Baixing.ipa'"
 
+#define call_ruby @"ruby %@"
+
+#define git_reset @""
+
 
 //# First build the archive
 //xcodebuild archive -scheme $SCHEME_NAME -archivePath $ARCHIVE_NAME

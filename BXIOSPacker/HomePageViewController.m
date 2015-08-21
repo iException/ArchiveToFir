@@ -74,7 +74,7 @@
     
     // Waiting alert with ProgressIndicator
     NSAlert *alertSheet = [[NSAlert alloc]init];
-    [alertSheet setMessageText:@"Please waiting for uploading..."];
+    [alertSheet setMessageText:@"Please waiting for processing..."];
     NSView *backView = [[NSView alloc]initWithFrame:NSRectFromCGRect(CGRectMake(0, 0, 150, 100))];
     
     NSProgressIndicator *indicator = [[NSProgressIndicator alloc]initWithFrame:NSRectFromCGRect(CGRectMake(50,0 , 100, 100))];
@@ -109,7 +109,7 @@
 //    [self presentViewControllerAsModalWindow:vc];
     
     NSAlert *alertSheet = [[NSAlert alloc]init];
-    [alertSheet setMessageText:@"Please waiting for processing..."];
+    [alertSheet setMessageText:@"Please waiting for uploading..."];
     NSView *backView = [[NSView alloc]initWithFrame:NSRectFromCGRect(CGRectMake(0, 0, 150, 100))];
     
     NSProgressIndicator *indicator = [[NSProgressIndicator alloc]initWithFrame:NSRectFromCGRect(CGRectMake(50,0 , 100, 100))];
@@ -242,18 +242,28 @@
 
 
 -(NSString *)packArchiveToIpaAndReturnInfo {
+    // Modify configuration for archive
+    NSString *rubyPath = [_fileUrl stringByReplacingOccurrencesOfString:@"code/Baixing" withString:@"ruby/ArchiveForPacker.rb"];
+    NSString *commandRuby = [NSString stringWithFormat:call_ruby,rubyPath];
+    [self callShellWithCommand:commandRuby];
     
     NSDateFormatter *todayFormatter = [[NSDateFormatter alloc]init];
     [todayFormatter setDateFormat:@"YYYY-MM-dd"];
     NSString *today = [todayFormatter stringFromDate:[NSDate date]];
     
-    //Call the Archive of Baixing.xcodeproj
+    // Call the Archive of Baixing.xcodeproj
     NSString *commandCallArchiveWithDate = [NSString stringWithFormat:call_archive,today];
-    //Pack to desktop
+    // Pack to desktop
     NSString *commandPackProjectWithDate = [NSString stringWithFormat:export_ipa,today, NSHomeDirectory()];
     
     NSString *commandCallAndPack = [[commandCallArchiveWithDate stringByAppendingString:@" && "] stringByAppendingString:commandPackProjectWithDate];
     [self callShellWithCommand:commandCallAndPack];
+    
+    // Git reset changes
+    NSString *commandReset = [NSString stringWithFormat:git_reset];
+    [self callShellWithCommand:commandReset];
+
+    
     
     return _packProcessInfo;
 }
