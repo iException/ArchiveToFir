@@ -14,7 +14,6 @@
 		8CEAEFFE1B5DDB1A00341E0F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CEAEFFC1B5DDB1A00341E0F /* Main.storyboard */; };
 		8CEAF00A1B5DDB1A00341E0F /* BXIOSPackerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CEAF0091B5DDB1A00341E0F /* BXIOSPackerTests.m */; };
 		8CEAF0151B5DE7BC00341E0F /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CEAF0141B5DE7BC00341E0F /* HomePageViewController.m */; };
-		8CEAF01D1B5E374A00341E0F /* ProcessInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CEAF01C1B5E374A00341E0F /* ProcessInfoViewController.m */; };
 		A1D2E1DEC77D829E022C23B0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 267BC3DC65FE76B371535CFE /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -45,8 +44,6 @@
 		8CEAF0091B5DDB1A00341E0F /* BXIOSPackerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BXIOSPackerTests.m; sourceTree = "<group>"; };
 		8CEAF0131B5DE7BC00341E0F /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomePageViewController.h; sourceTree = "<group>"; };
 		8CEAF0141B5DE7BC00341E0F /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomePageViewController.m; sourceTree = "<group>"; };
-		8CEAF01B1B5E374A00341E0F /* ProcessInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessInfoViewController.h; sourceTree = "<group>"; };
-		8CEAF01C1B5E374A00341E0F /* ProcessInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcessInfoViewController.m; sourceTree = "<group>"; };
 		B19B3FC81B5FAB7000D1D044 /* CommandDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandDefinition.h; sourceTree = "<group>"; };
 		B862D841C9C85F1950467B06 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -162,8 +159,6 @@
 			children = (
 				8CEAF0131B5DE7BC00341E0F /* HomePageViewController.h */,
 				8CEAF0141B5DE7BC00341E0F /* HomePageViewController.m */,
-				8CEAF01B1B5E374A00341E0F /* ProcessInfoViewController.h */,
-				8CEAF01C1B5E374A00341E0F /* ProcessInfoViewController.m */,
 			);
 			name = FunctionalController;
 			sourceTree = "<group>";
@@ -305,7 +300,6 @@
 			files = (
 				8CEAF0151B5DE7BC00341E0F /* HomePageViewController.m in Sources */,
 				8CEAEFF91B5DDB1A00341E0F /* ViewController.m in Sources */,
-				8CEAF01D1B5E374A00341E0F /* ProcessInfoViewController.m in Sources */,
 				8CEAEFF61B5DDB1A00341E0F /* main.m in Sources */,
 				8CEAEFF41B5DDB1A00341E0F /* AppDelegate.m in Sources */,
 			);

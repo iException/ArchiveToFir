@@ -68,10 +68,6 @@
 
 - (IBAction)packProjectBtnPressed:(id)sender {
     
-//    self.identifier = @"PackVC";
-//    ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
-//    vc.delegate = self;
-    
     // Waiting alert with ProgressIndicator
     NSAlert *alertSheet = [[NSAlert alloc]init];
     [alertSheet setMessageText:@"Please waiting for processing..."];
@@ -102,12 +98,6 @@
 
 - (IBAction)uploadProjectBtnPressed:(id)sender {
     
-//    self.identifier = @"UploadVC";
-//    ProcessInfoViewController *vc =  [self.storyboard instantiateControllerWithIdentifier:@"ProcessInfoVC"];
-//    vc.delegate = self;
-//    
-//    [self presentViewControllerAsModalWindow:vc];
-    
     NSAlert *alertSheet = [[NSAlert alloc]init];
     [alertSheet setMessageText:@"Please waiting for uploading..."];
     NSView *backView = [[NSView alloc]initWithFrame:NSRectFromCGRect(CGRectMake(0, 0, 150, 100))];
@@ -134,10 +124,7 @@
             });
         
         }];
-        // Complete then update UI
     });
-
-
 }
 
 
@@ -242,32 +229,43 @@
 
 
 -(NSString *)packArchiveToIpaAndReturnInfo {
-    // Modify configuration for archive
-    NSString *rubyPath = [_fileUrl stringByReplacingOccurrencesOfString:@"code/Baixing" withString:@"ruby/ArchiveForPacker.rb"];
-    NSString *commandRuby = [NSString stringWithFormat:call_ruby,rubyPath];
-    [self callShellWithCommand:commandRuby];
+    
+    [self changeConfigurationForArchive];
     
     NSDateFormatter *todayFormatter = [[NSDateFormatter alloc]init];
     [todayFormatter setDateFormat:@"YYYY-MM-dd"];
     NSString *today = [todayFormatter stringFromDate:[NSDate date]];
     
     // Call the Archive of Baixing.xcodeproj
-    NSString *commandCallArchiveWithDate = [NSString stringWithFormat:call_archive,today];
+    NSString *commandCallArchiveWithDate = [NSString stringWithFormat:call_archive,NSHomeDirectory(), today];
     // Pack to desktop
-    NSString *commandPackProjectWithDate = [NSString stringWithFormat:export_ipa,today, NSHomeDirectory()];
+    NSString *commandPackProjectWithDate = [NSString stringWithFormat:export_ipa,NSHomeDirectory(), today, NSHomeDirectory()];
     
     NSString *commandCallAndPack = [[commandCallArchiveWithDate stringByAppendingString:@" && "] stringByAppendingString:commandPackProjectWithDate];
     [self callShellWithCommand:commandCallAndPack];
     
-    // Git reset changes
-    NSString *commandReset = [NSString stringWithFormat:git_reset];
-    [self callShellWithCommand:commandReset];
-
-    
+    [self resetChangesUsingGit];
     
     return _packProcessInfo;
 }
 
+-(void)changeConfigurationForArchive {
+    // Stash current workspace
+    [self callShellWithCommand:git_stash];
+    
+    // Modify configuration
+    NSString *rubyPath = [_fileUrl stringByReplacingOccurrencesOfString:@"code/Baixing" withString:@"ruby/ArchiveForPacker.rb"];
+    NSString *commandRuby = [NSString stringWithFormat:call_ruby,rubyPath];
+    [self callShellWithCommand:commandRuby];
+}
+
+-(void)resetChangesUsingGit {
+    // Git reset changes
+    [self callShellWithCommand:git_reset];
+    
+    // Git stash apply
+    [self callShellWithCommand:git_apply];
+}
 
 - (void)postRequestToFirAndUploadWhenSuccess:(void (^)(void))success {
     
@@ -283,10 +281,6 @@
           success:^(AFHTTPRequestOperation *operation, id resposeobject) {
               NSLog(@"get json: %@", resposeobject);
               [tmpSelf uploadIpaToFirWithJson:resposeobject success:success];
-              
-//              NSTextView *textContent = [processInfo documentView];
-//              [textContent setString:_uploadProcessInfo];
-              
           } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
               NSLog(@"Error: %@", error);
           }];
@@ -328,11 +322,7 @@
         _uploadProcessInfo = [_uploadProcessInfo stringByAppendingString:
                                                     [[NSString alloc] initWithData:completionData
                                                                           encoding:NSUTF8StringEncoding]];
-        
         success();
-//        NSTextView *textContent = [processInfo documentView];
-//        [textContent setString:_uploadProcessInfo];
-        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
         

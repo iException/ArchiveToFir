@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ProcessInfoViewController.h"
 
 @interface HomePageViewController : NSViewController<NSTextFieldDelegate>
 

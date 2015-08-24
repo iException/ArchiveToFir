@@ -12,21 +12,19 @@
 
 #pragma mark - Command List
 
-#define call_archive @"xcodebuild clean && xcodebuild archive -workspace Baixing.xcworkspace -scheme Baixing -sdk iphoneos -configuration Release -archivePath ~/Library/Developer/Xcode/Archives/%@/BaixingFromPacker.xcarchive"
+#define call_archive @"xcodebuild clean && xcodebuild archive -workspace Baixing.xcworkspace -scheme Baixing -sdk iphoneos -configuration Release -archivePath %@/Library/Developer/Xcode/Archives/%@/BaixingFromPacker.xcarchive"
 
-#define export_ipa @"xcodebuild -exportArchive -archivePath ~/Library/Developer/Xcode/Archives/%@/BaixingFromPacker.xcarchive -exportPath %@/Desktop/Baixing -exportFormat ipa -exportProvisioningProfile \"iosbaixing_inhouse\""
+#define export_ipa @"xcodebuild -exportArchive -archivePath %@/Library/Developer/Xcode/Archives/%@/BaixingFromPacker.xcarchive -exportPath %@/Desktop/Baixing -exportFormat ipa -exportProvisioningProfile \"iosbaixing_inhouse\""
 
 #define pack_to_ipa @"xcrun -sdk iphoneos PackageApplication -v '%@/Library/Developer/Xcode/Archives/%@/BaixingFromScript.xcarchive/Products/Applications/Baixing.app' -o '%@/Desktop/Baixing.ipa'"
 
 #define call_ruby @"ruby %@"
 
-#define git_reset @""
+#define git_stash @"git stash"
 
+#define git_apply @"git stash apply"
 
-//# First build the archive
-//xcodebuild archive -scheme $SCHEME_NAME -archivePath $ARCHIVE_NAME
-//# Then export it to an IPA
-//xcodebuild -exportArchive -archivePath $ARCHIVE_NAME.xcarchive -exportPath $ARCHIVE_NAME -exportFormat ipa -exportProvisioningProfile "$PROVISIONING_PROFILE" -exportSigningIdentity "$DEVELOPER_NAME"
+#define git_reset @"git reset --hard HEAD"
 
 //---------------------------------------------------------------------------------
 
